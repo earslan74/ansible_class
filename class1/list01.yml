@@ -1,0 +1,13 @@
+---
+- pynet-rtr01:
+    ip_addr: 1.1.1.1
+    username: admin
+- pynet-rtr02:
+    ip_addr: 2.2.2.2
+    username: user01
+- juniper-srx:
+    ip_addr: 3.3.3.3
+    username: user03
+- false
+- ntp: no
+

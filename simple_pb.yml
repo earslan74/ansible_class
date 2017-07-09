@@ -1,0 +1,11 @@
+---
+
+- name: Print out variables
+  hosts: cisco:arista
+  tasks: 
+    - debug:
+        msg: "{{ ntp1 }}"
+    - debug:
+        msg: "{{ ntp2 }}"
+    - debug:
+        msg: "{{ as_number }}"

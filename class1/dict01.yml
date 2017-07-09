@@ -1,0 +1,13 @@
+---
+hostname: pynet-rtr01
+ip_address: 1.1.1.1
+username: admin
+ntp_servers:
+  - 10.10.10.10
+  - 10.10.20.20
+dns_servers:
+  - 8.8.8.4
+  - 8.8.8.8
+as_number: 44
+ip_redirects: False
+
