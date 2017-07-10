@@ -1,0 +1,22 @@
+---
+- name: IOS Example
+  hosts: cisco
+  vars:
+    creds: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  tasks:
+    - ios_facts:
+        provider: "{{ creds }}"
+      tags: facts_only
+
+    - ios_command:
+        provider: "{{ creds }}"
+        commands: show version
+      tags: int_brief
+      register: version
+
+    - debug:
+        msg: "{{ version['stdout_lines'][0][10] }}"
