@@ -1,0 +1,43 @@
+---
+- name: Print out EOS Router ARP
+  gather_facts: no
+  hosts: arista
+  vars:
+    eapi: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: eapi
+      use_ssl: True
+      validate_certs: no
+
+  tasks: 
+    - name: Issue show arp EOS command
+      eos_command: 
+        provider: "{{ eapi }}"
+        commands: show arp
+      register: show_arp  # Save the output to show_arp variable
+      tags: 
+        - sh_arp
+        - arp_debug
+        - arp_table
+
+    - name: Filter the ARP - Intermediate Step -  
+      set_fact:
+        mac_table: "{{ show_arp.stdout_lines[0].ipV4Neighbors }}"
+      tags: arp_table
+
+    - name: Print out the Filtered ARP Table
+      debug:
+        var: mac_table
+      tags: arp_table
+
+    - name: Grab the Gateway Mac-address
+      set_fact:
+        gateway_mac: "{{ item.hwAddress }}"
+      with_items: "{{ mac_table }}"
+      when: item.address == "10.220.88.1"
+
+    - name: Print Out Gateway Mac-Address
+      debug:
+        var: gateway_mac

@@ -1,0 +1,16 @@
+---
+- name: Print out IOS Router Facts
+  hosts: cisco
+  vars:
+    creds: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks: 
+    - name: Print out Facts
+      ios_facts:
+        provider: "{{ creds }}"
+      tags: facts_only
+    - name: Print out The Serial Number
+      debug: 
+        var: ansible_net_serialnum

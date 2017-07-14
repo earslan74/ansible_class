@@ -1,0 +1,40 @@
+---
+- name: Print out IOS Router Facts
+  gather_facts: no
+  hosts: cisco
+  vars:
+    creds: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks: 
+    - name: Print out Facts
+      ios_facts:
+        provider: "{{ creds }}"
+      tags: task1, task2, task3, task4
+
+    - name: Print out all IPv4
+      debug: 
+        var: ansible_net_all_ipv4_addresses
+      # when: ansible_net_all_ipv4_addresses == ["10.220.88.21"] 
+      # when: ansible_net_all_ipv4_addresses[0] == "10.220.88.21"
+      when: "'10.220.88.21' in ansible_net_all_ipv4_addresses"
+      tags: task1
+
+    - name: Print out interfaces
+      debug:
+        var: ansible_net_interfaces.keys()
+      tags: task2
+
+    - name: Up interfaces
+      debug:
+        msg: "Active interfaces: {{ item.key }}"
+      with_dict: "{{ ansible_net_interfaces }}"
+      when: item.value.operstatus == "up"
+      tags: task3
+
+    - name: Print Device Model
+      debug: 
+        var: ansible_net_model
+      when: "'881' in ansible_net_model"
+      tags: task4 

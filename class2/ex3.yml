@@ -1,0 +1,46 @@
+---
+- name: Print out IOS Router ARP
+  gather_facts: no
+  hosts: cisco
+  vars:
+    creds: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks: 
+    - name: Issue show arp IOS command
+      ios_command: 
+        provider: "{{ creds }}"
+        commands: show arp
+      register: show_arp  # Save the output to show_arp variable
+      tags: 
+        - sh_arp
+        - arp_debug
+        - new_arp
+        - filter_arp
+
+    - name: Print out ARP Table
+      debug:
+        var: show_arp
+      tags: 
+        - arp_debug
+        - new_arp
+        - filter_arp
+
+    - name: Set Fact Output
+      set_fact:
+        show_arp_new: "{{ show_arp.stdout_lines[0] }}" # Save the specific portion of the show arp output to a new variable
+
+    - name: Print Out New show arp
+      debug: 
+        var: show_arp_new
+      tags: 
+        - new_arp
+        - filter_arp
+
+    - name: Filter out the ARP Output # Print out the arp line including only 10.220.88.1 address
+      debug:
+        var: item
+      with_items: "{{ show_arp_new }}" # show_arp_new is a list of arp table
+      when: "'10.220.88.1 ' in item"
+      tags: filter_arp
