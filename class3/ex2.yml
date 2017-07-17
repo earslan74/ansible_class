@@ -1,0 +1,34 @@
+---
+- name: NXOS IP Interface Config Example
+  hosts: nxos
+  gather_facts: no
+  tasks:
+    - name: Create IPv4 Interface
+      nxos_ip_interface:
+        provider: "{{ provider_nxapi }}"
+        interface: Ethernet2/4
+        version: v4
+        state: present
+        addr: "{{ ipv4 }}"  # IPv4 address is taken from the host variable file for each NXOS switch
+        mask: 24
+      tags: ipv4_if
+      notify: write_mem
+
+    - name: Create IPv6 Interface
+      nxos_ip_interface:
+        provider: "{{ provider_ssh }}"  # SSH is used for IPv6 as there's a bug using NXAPI to configure IPv6 interfaces
+        interface: Ethernet2/4
+        version: v6
+        state: present
+        addr: "{{ ipv6 }}"  # IPv6 address is taken from the host variable file for each NXOS switch
+        mask: 64
+      tags: ipv6_if
+      notify: write_mem
+
+  handlers:
+    - name: write_mem
+      nxos_command:
+        provider: "{{ provider_ssh }}"
+        commands: copy run start
+      changed_when: True
+      tags: wr_mem 

@@ -1,5 +1,4 @@
 ---
-
 provider_ssh:
   host: "{{ ansible_host }}"
   username: "{{ username }}"
@@ -17,14 +16,14 @@ provider_nxapi:
   port: 8443
 
 vlans_common:
-  - vlan_id: 583
+  - vlan_id: 301
     admin_state: up
-    name: ANS583
-  - vlan_id: 584
+    name: blue
+  - vlan_id: 302
     admin_state: up
-    name: ANS584
-  - vlan_id: 585
+    name: red
+  - vlan_id: 303
     admin_state: up
-    name: ANS585
+    name: green
 
 vlans: "{{ vlans_common }} + {{ vlans_unique|default([]) }}"

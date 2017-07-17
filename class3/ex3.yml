@@ -1,0 +1,21 @@
+---
+- name: NXOS Ping Example
+  hosts: nxos
+  gather_facts: no
+  tasks:
+    - name: Ping Peer Device
+      nxos_ping:
+        provider: "{{ provider_ssh }}"
+        dest: "{{ peer_ip }}"
+        vrf: default
+        host: "{{ ipv4 }}"
+      tags: ping
+      register: output
+
+    - name: Print out the Ping output
+      debug:
+        var: output
+      tags: ping
+        
+
+

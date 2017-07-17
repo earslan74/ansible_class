@@ -1,0 +1,28 @@
+---
+- name: NXOS SNMP Config Example
+  hosts: nxos
+  gather_facts: no
+  tasks:
+    - name: Configure SNMP Location
+      nxos_snmp_location:
+        provider: "{{ provider_ssh }}" # SSH is used to connect due to an NXAPI bug
+        location: "{{ location }}" # SNMP location info is taken from host vars files for each device
+        state: present
+      tags: snmp_loc
+      notify: write_mem
+
+    - name: Configure SNMP Contact
+      nxos_snmp_contact:
+        provider: "{{ provider_ssh }}"  # SSH is used to connect due to an NXAPI bug
+        contact: "{{ contact }}" # SNMP contact info is taken from host vars files for each device
+        state: present
+      tags: snmp_con
+      notify: write_mem
+
+  handlers:
+    - name: write_mem
+      nxos_command:
+        provider: "{{ provider_ssh }}"
+        commands: copy run start
+      changed_when: True
+      tags: wr_mem 
