@@ -1,0 +1,13 @@
+---
+- name: NXOS Example
+  hosts: nxos
+  gather_facts: no
+  tasks:
+    - name: Create new VLANs
+      nxos_vlan:
+        provider: "{{ provider_nxapi }}"
+        vlan_id: "{{ item.vlan_id }}"
+        admin_state: "{{ item.admin_state }}"
+        name: "{{ item.name }}"
+        state: absent
+      with_items: "{{ vlans }}" 

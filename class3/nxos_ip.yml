@@ -1,0 +1,33 @@
+---
+- name: NXOS Example
+  hosts: nxos
+  gather_facts: no
+  tasks:
+    - name: Create new VLANs
+      nxos_vlan:
+        provider: "{{ provider_nxapi }}"
+        vlan_id: "{{ item.vlan_id }}"
+        admin_state: "{{ item.admin_state }}"
+        name: "{{ item.name }}"
+        state: absent
+      with_items: "{{ vlans }}"
+      notify: write_mem
+
+    - name: Create IP Interface
+      nxos_ip_interface:
+        provider: "{{ provider_nxapi }}"
+        interface: Ethernet2/6
+        version: v4
+        state: absent
+        addr: 10.99.2.88
+        mask: 24
+      tags: ip_if
+      notify: write_mem
+
+  handlers:
+    - name: write_mem
+      nxos_command:
+        provider: "{{ provider_ssh }}"
+        commands: copy run start
+      changed_when: True
+      tags: wr_mem 

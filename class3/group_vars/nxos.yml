@@ -1,0 +1,30 @@
+---
+
+provider_ssh:
+  host: "{{ ansible_host }}"
+  username: "{{ username }}"
+  password: "{{ password }}"
+  transport: cli
+  timeout: 60
+ 
+provider_nxapi:
+  host: "{{ ansible_host }}"
+  username: "{{ username }}"
+  password: "{{ password }}"
+  transport: nxapi
+  use_ssl: yes
+  validate_certs: no
+  port: 8443
+
+vlans_common:
+  - vlan_id: 583
+    admin_state: up
+    name: ANS583
+  - vlan_id: 584
+    admin_state: up
+    name: ANS584
+  - vlan_id: 585
+    admin_state: up
+    name: ANS585
+
+vlans: "{{ vlans_common }} + {{ vlans_unique|default([]) }}"

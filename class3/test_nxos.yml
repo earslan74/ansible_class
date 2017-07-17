@@ -1,0 +1,28 @@
+---
+- name: NXOS Example
+  hosts: nxos
+  gather_facts: no
+  vars: 
+    ssh: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+    nxapi:
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: nxapi
+      use_ssl: yes
+      validate_certs: no
+      port: 8443
+
+  tasks:
+    - name: Gather NXOS facts via SSH
+      nxos_facts:
+        provider: "{{ ssh }}"
+    - name: Gather NXOS facts via NXAPI
+      nxos_facts:
+        provider: "{{ nxapi }}"
+

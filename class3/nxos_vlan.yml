@@ -1,0 +1,28 @@
+---
+- name: NXOS Example
+  hosts: nxos
+  gather_facts: no
+  vars: 
+    ssh: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: cli
+
+    nxapi:
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      transport: nxapi
+      use_ssl: yes
+      validate_certs: no
+      port: 8443
+
+  tasks:
+    - name: Create new VLANs
+      nxos_vlan:
+        provider: "{{ nxapi }}"
+        vlan_id: 583
+        admin_state: up
+        name: ANS583
+       
