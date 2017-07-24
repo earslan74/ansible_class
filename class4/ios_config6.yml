@@ -1,0 +1,32 @@
+---
+# 3 different plays for Cisoc IOS, Arista EOS & Nexus NXOS switches
+- name: Cisco IOS Config Example
+  hosts: pynet-rtr1
+  gather_facts: false
+  tasks:
+    - name: IOS Config
+      ios_config:
+        provider: "{{ creds_ssh }}"
+        lines: "{{ global_config }}"
+      tags: ios
+
+- name: Arista EOS Config Example
+  hosts: pynet-sw5
+  gather_facts: false
+  tasks: 
+    - name: EOS Config
+      eos_config:
+        provider: "{{ creds_eapi }}"
+        lines: "{{ global_config }}"
+      tags: eos
+
+- name: Nexus NXOS Config Example      
+  hosts: nxos1
+  gather_facts: false
+  tasks:
+    - name: NXOS Config
+      nxos_config:
+        provider: "{{ creds_nxapi }}"
+        lines: "{{ global_config }}" 
+      tags: nxos
+

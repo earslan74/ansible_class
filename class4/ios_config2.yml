@@ -1,0 +1,23 @@
+---
+- name: IOS Config Example
+  hosts: pynet-rtr1
+  vars:
+    creds:
+      host: "{{ ansible_host }}"
+      # Username and password is not provided in the creds, so this needs to be provided while running the playbook 
+      # with -u <username> -k <password> 
+  tasks:
+    - ios_facts:
+        provider: "{{ creds }}"
+      tags: facts_only
+
+    - name: IOS Config
+      ios_config:
+        provider: "{{ creds }}"
+        lines: # Following lines are config items within the global config context
+          - ip domain name twb-tech.com
+          - ip name-server 8.8.8.8
+          - ip name-server 8.8.4.4
+          - ntp server 130.126.24.24
+          - ntp server 152.2.21.1
+

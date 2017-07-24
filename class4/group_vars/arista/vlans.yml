@@ -1,0 +1,12 @@
+---
+vlans:
+  - vlan_id: 583
+    admin_state: up
+    name: ANS583
+  - vlan_id: 586
+    admin_state: up
+    name: ANS586
+  - vlan_id: 587
+    admin_state: up
+    name: ANS587
+

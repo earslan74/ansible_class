@@ -1,0 +1,15 @@
+---
+- name: Arista EOS Route Config
+  hosts: pynet-sw5
+  gather_facts: false
+  tasks: 
+    - name: Configure Routing
+      eos_config:
+        provider: "{{ creds_eapi }}"
+        lines:
+          - "ip route 1.1.88.10/32 {{ default_gateway }}"
+          - "ip route 1.1.88.11/32 {{ default_gateway }}"
+          - "ip route 1.1.88.12/32 {{ default_gateway }}"
+          - "ip route 1.1.88.13/32 {{ default_gateway }}"
+        backup: yes
+      tags: eos

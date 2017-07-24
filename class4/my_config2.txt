@@ -1,0 +1,7 @@
+ip domain name {{ default_domain }}
+{% for ns in [name_server1, name_server2] %}
+ip name-server {{ ns }}
+{% endfor %}
+{% for ntp in [ntp1, ntp2] %}
+ntp server {{ ntp }}
+{% endfor %}

@@ -1,0 +1,14 @@
+---
+- name: IOS Config Example
+  hosts: pynet-rtr1
+  vars:
+    creds:
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  tasks:
+    - name: IOS Config From a File
+      ios_config:
+        provider: "{{ creds }}"
+        src: my_config2.txt

@@ -1,0 +1,7 @@
+---
+# Global config variables apply to all devices are below
+default_domain: twb-tech.com
+name_server1: 8.8.8.8
+name_server2: 8.8.4.4
+ntp1: 130.126.24.24
+ntp2: 152.2.21.1

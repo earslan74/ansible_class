@@ -1,0 +1,17 @@
+---
+- name: Arista EOS VLAN Config
+  hosts: arista
+  gather_facts: false
+  tasks: 
+    - name: Configure VLANs
+      eos_config:
+        provider: "{{ creds_eapi }}"
+        parents: ["vlan {{ item.vlan_id }}"]
+        lines:
+          - "name {{ item.name }}"
+        before: ["no vlan {{ item.vlan_id }}"]
+        replace: line
+        match: exact
+        backup: yes
+      with_items: "{{ vlans }}"
+      tags: eos

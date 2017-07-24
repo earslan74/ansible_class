@@ -1,0 +1,27 @@
+---
+- name: IOS Config Example
+  hosts: pynet-rtr1
+  vars:
+    creds:
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks:
+    - ios_facts:
+        provider: "{{ creds }}"
+      tags: facts_only
+
+    - name: IOS ACL Config
+      ios_config:
+        provider: "{{ creds }}"
+        parents: ["ip access-list extended TEST1-ACL"]
+        lines:
+          - permit ip host 1.1.1.1 any log
+          - permit ip host 2.2.2.2 any log
+          - permit ip host 3.3.3.3 any log
+          - permit ip host 4.4.4.4 any log
+          - permit ip host 5.5.5.5 any log
+        before: ["no ip access-list extended TEST1-ACL"]
+        replace: block
+        match: line
+        backup: yes
