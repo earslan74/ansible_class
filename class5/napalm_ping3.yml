@@ -1,0 +1,11 @@
+---
+# Ping the default gateway from the cisco and the arista devices
+- name: NAPALM Ping
+  hosts: cisco:arista  # Both cisco and arista device groups
+  tasks: 
+    - name: NAPALM Ping
+      napalm_ping:
+        provider: "{{ creds }}"  # "creds" is a group variable for both cisco and arista devices (which reside in
+# group_vars/cisco.yml and group_vars/arista.yml respectively
+        destination: 10.220.88.1
+      tags: ping_gw

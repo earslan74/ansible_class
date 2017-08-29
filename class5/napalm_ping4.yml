@@ -1,0 +1,11 @@
+---
+# Ping 8.8.8.8 from the cisco, arista and juniper devices
+- name: NAPALM Ping
+  hosts: cisco:arista:juniper
+  tasks: 
+    - name: NAPALM Ping
+      napalm_ping:
+        provider: "{{ creds }}"  # "creds" is a group variable for cisco, arista and juniper devices (which reside in
+# group_vars/cisco.yml, group_vars/arista.yml group_vars/juniper.yml respectively
+        destination: 8.8.8.8
+      tags: ping_gw

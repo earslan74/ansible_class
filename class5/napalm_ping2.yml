@@ -1,0 +1,10 @@
+---
+# Ping the default gateway from the cisco devices
+- name: NAPALM Ping
+  hosts: cisco
+  tasks: 
+    - name: NAPALM Ping
+      napalm_ping:
+        provider: "{{ creds }}"
+        destination: 10.220.88.1
+      tags: ping_gw
