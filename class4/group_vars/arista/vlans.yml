@@ -5,7 +5,7 @@ vlans:
     name: ANS583
   - vlan_id: 586
     admin_state: up
-    name: ANS586
+    name: ANS586-TEST
   - vlan_id: 587
     admin_state: up
     name: ANS587

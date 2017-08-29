@@ -1,11 +1,11 @@
 ! Command: show running-config
-! device: pynet-sw8 (vEOS, EOS-4.15.4F)
+! device: pynet-sw7 (vEOS, EOS-4.15.4F)
 !
 ! boot system flash:/vEOS-lab.swi
 !
 transceiver qsfp default-mode 4x10G
 !
-hostname pynet-sw8
+hostname pynet-sw7
 !
 ntp server 130.126.24.24
 !
@@ -17,7 +17,7 @@ no aaa root
 !
 username admin privilege 15 role network-admin secret 5 $1$aM6w809x$tgkc6ZGhcScvELVKVHq3n0
 username admin1 privilege 15 secret 5 $1$7kD0oS/t$wXhtTFwnWwnlPFKWwXoJ70
-username eapi secret 5 $1$zBpvd4C5$LDS6j8PPt6rHikh79Hi46/
+username eapi secret 5 $1$jMZJZ7Ig$w6ajfFPHU1w5T9e3Rsc84.
 username pyclass privilege 15 secret 5 $1$C3VfUfcO$86t4iqCX60yW.NIR8d2Lh0
 !
 clock timezone America/Los_Angeles
@@ -32,7 +32,7 @@ vlan 585
    name ANS585
 !
 vlan 586
-   name ANS586
+   name ANS586-TEST
 !
 vlan 587
    name ANS587
@@ -56,7 +56,7 @@ interface Management1
    shutdown
 !
 interface Vlan1
-   ip address 10.220.88.35/24
+   ip address 10.220.88.34/24
 !
 ip route 0.0.0.0/0 10.220.88.1
 !

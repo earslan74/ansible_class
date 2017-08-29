@@ -32,7 +32,7 @@ vlan 585
    name ANS585
 !
 vlan 586
-   name ANS586
+   name ANS586-TEST
 !
 vlan 587
    name ANS587

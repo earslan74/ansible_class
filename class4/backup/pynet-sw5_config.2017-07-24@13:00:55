@@ -1,12 +1,17 @@
 ! Command: show running-config
-! device: pynet-sw7 (vEOS, EOS-4.15.4F)
+! device: pynet-sw5 (vEOS, EOS-4.15.4F)
 !
 ! boot system flash:/vEOS-lab.swi
 !
 transceiver qsfp default-mode 4x10G
 !
-hostname pynet-sw7
+hostname pynet-sw5
+ip name-server vrf default 8.8.4.4
+ip name-server vrf default 8.8.8.8
+ip domain-name twb-tech.com
 !
+ntp server 1.11.2.1
+ntp server 2.11.9.17
 ntp server 130.126.24.24
 !
 spanning-tree mode mstp
@@ -17,7 +22,7 @@ no aaa root
 !
 username admin privilege 15 role network-admin secret 5 $1$aM6w809x$tgkc6ZGhcScvELVKVHq3n0
 username admin1 privilege 15 secret 5 $1$7kD0oS/t$wXhtTFwnWwnlPFKWwXoJ70
-username eapi secret 5 $1$jMZJZ7Ig$w6ajfFPHU1w5T9e3Rsc84.
+username eapi secret 5 $1$Kt0.fwmk$5Q14WW76.w5xBIHwMHNX0/
 username pyclass privilege 15 secret 5 $1$C3VfUfcO$86t4iqCX60yW.NIR8d2Lh0
 !
 clock timezone America/Los_Angeles
@@ -32,7 +37,7 @@ vlan 585
    name ANS585
 !
 vlan 586
-   name ANS586
+   name ANS586-TEST
 !
 vlan 587
    name ANS587
@@ -56,9 +61,13 @@ interface Management1
    shutdown
 !
 interface Vlan1
-   ip address 10.220.88.34/24
+   ip address 10.220.88.32/24
 !
 ip route 0.0.0.0/0 10.220.88.1
+ip route 1.1.88.10/32 10.220.88.1
+ip route 1.1.88.11/32 10.220.88.1
+ip route 1.1.88.12/32 10.220.88.1
+ip route 1.1.88.13/32 10.220.88.1
 !
 ip routing
 !
