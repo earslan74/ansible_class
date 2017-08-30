@@ -1,0 +1,10 @@
+vlan 300
+  name BLUE00
+vlan 301
+  name BLUE01
+vlan 302
+  name BLUE02
+vlan 303
+  name BLUE03
+vlan 304
+  name BLUE04

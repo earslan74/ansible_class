@@ -5,3 +5,5 @@ creds:
   password: "{{ password }}"
   dev_os: "eos"
   optional_args: {}
+
+validate_file: "validate_eos.yml"

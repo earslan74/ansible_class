@@ -12,3 +12,5 @@ creds_secret:
   dev_os: "ios"
   optional_args:
     secret: "{{ password }}"
+
+validate_file: "validate_ios.yml"
