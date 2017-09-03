@@ -1,0 +1,33 @@
+---
+- name: NAPALM BGP Config
+  hosts: nxos
+  gather_facts: False
+  tasks: 
+    - napalm_install_config:
+        provider: "{{ creds }}"
+        config_file: "CFGS/{{ inventory_hostname }}-bgp.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+
+    - name: Give a Pause before checking out the BGP Session
+      pause:
+        seconds: 10 # Pause for 1 minute before checking out the BGP Session
+
+    - name: Check out the BGP Session
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "bgp_neighbors"
+
+    - name: BGP Session State
+      set_fact:
+        session_state: "{{ napalm_bgp_neighbors['global']['peers'][peer_ip]['is_up'] }}" # peer_ip is a host_var
+
+    - name: Print the BGP Session State
+      debug:
+        var: session_state 
+ 
+    - name: Verify the BGP Session state
+      assert:
+        that: session_state == true
+        msg: "Session with {{ peer_ip }} is DOWN!"

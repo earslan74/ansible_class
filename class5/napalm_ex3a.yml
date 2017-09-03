@@ -1,0 +1,12 @@
+---
+- name: NAPALM BGP Config
+  hosts: nxos
+  gather_facts: False
+  tasks: 
+    - napalm_install_config:
+        provider: "{{ creds }}"
+        config_file: "CFGS/{{ inventory_hostname }}-bgp.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+

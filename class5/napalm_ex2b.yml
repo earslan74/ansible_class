@@ -1,0 +1,30 @@
+---
+- name: NAPALM Get Facts - IP Address info
+  hosts: nxos1:nxos2
+  tasks: 
+    - name: Get interface_ip facts
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "interfaces_ip"
+      tags: ip_int
+
+    - name: Get the IP Address info
+      set_fact:
+        ip_info: "{{ napalm_interfaces_ip['Ethernet2/2']['ipv4'] }}"
+
+    - name: Extract the IP and the Subnet Mask
+      set_fact:
+        ip_addr: "{{ item.key }}"
+        ip_mask: "{{ item.value['prefix_length'] }}"
+      with_dict: "{{ ip_info }}" 
+      
+    - name: Print the IP address/Subnet Mask
+      debug:
+        msg: "{{ ip_addr }}/{{ ip_mask }}"
+
+    - name: Verify the IP address/Subnet Mask
+      assert:
+        that: 
+          - ip_addr == "{{ int_ip }}"
+          - ip_mask == "{{ int_mask }}"
+        msg: "IP Address or Subnet Mask is not correctly configured!"

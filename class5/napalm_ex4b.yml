@@ -1,0 +1,26 @@
+---
+- name: NAPALM Full Config Replace
+  hosts: pynet-sw8
+  gather_facts: False
+  tasks: 
+    - napalm_install_config:
+        provider: "{{ creds }}"
+        config_file: "CFGS/{{ inventory_hostname }}.txt"
+        commit_changes: False
+        replace_config: True
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt" 
+      register: diff_output
+
+    - name: Print the diff from the baseline config (if there's a diff)
+      debug:
+        var: diff_output
+      when: diff_output.msg # .msg is a variable in the above output (Will be null when there's no difference)
+
+    - name: Load the Loopback interface
+      napalm_install_config:
+        provider: "{{ creds }}"
+        config_file: "CFGS/{{ inventory_hostname }}-int.txt"
+        commit_changes: True
+        replace_config: True
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+      when: not diff_output.msg

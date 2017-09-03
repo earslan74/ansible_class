@@ -1,0 +1,30 @@
+---
+- name: NAPALM Get Info
+  hosts: cisco
+  gather_facts: False
+  tasks: 
+    - name: LLDP Neighbors
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "lldp_neighbors"
+      tags: lldp
+
+    - name: LLDP Neighbors - New Variable - A subset of the output
+      set_fact:
+        lldp_info: "{{ napalm_lldp_neighbors[item][0] }}"
+      with_items: "{{ napalm_lldp_neighbors }}"
+
+    - name: Print SummaryLLDP Neighbors
+      debug:
+        var: lldp_info
+      tags: print_summary
+
+    - name: Verify the Connected Device
+      assert:
+        that: lldp_info.hostname == "twb-sf-hpsw1"
+        msg: "Not connected to the correct switch!"
+
+    - name: Verify the connected port
+      assert:
+        that: lldp_info.port == "15"
+        msg: "Should be connected to Port-15" 

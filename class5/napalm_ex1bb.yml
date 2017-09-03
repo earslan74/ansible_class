@@ -1,0 +1,19 @@
+---
+- name: NAPALM Get Info
+  hosts: cisco
+  tasks: 
+    - name: LLDP Neighbors
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "lldp_neighbors"
+      tags: lldp
+
+    - name: LLDP Neighbors - New Variable - A subset of the output
+      set_fact:
+        lldp_info: "{{ napalm_lldp_neighbors[item][0] }}"
+      with_items: "{{ napalm_lldp_neighbors }}"
+
+    - name: Print LLDP Neighbors
+      debug:
+        var: lldp_info
+      tags: print

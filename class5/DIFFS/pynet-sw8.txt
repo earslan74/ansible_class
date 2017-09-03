@@ -1,22 +1,12 @@
-@@ -22,6 +22,21 @@
- username pyclass privilege 15 secret 5 $1$C3VfUfcO$86t4iqCX60yW.NIR8d2Lh0
+@@ -36,11 +36,6 @@
  !
- clock timezone America/Los_Angeles
-+!
-+vlan 300
-+   name BLUE00
-+!
-+vlan 301
-+   name BLUE01
-+!
-+vlan 302
-+   name BLUE02
-+!
-+vlan 303
-+   name BLUE03
-+!
-+vlan 304
-+   name BLUE04
+ interface Ethernet7
  !
- interface Ethernet1
-    spanning-tree portfast
+-interface Loopback88
+-   ip address 10.88.88.188/32
+-   ipv6 enable
+-   ipv6 address 2001:db01:88:88::1/64
+-!
+ interface Management1
+    shutdown
+ !

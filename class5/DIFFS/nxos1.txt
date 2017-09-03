@@ -1,6 +1,0 @@
-vlan 300
-  name BLUE00
-  name BLUE01
-  name BLUE02
-  name BLUE03
-  name BLUE04

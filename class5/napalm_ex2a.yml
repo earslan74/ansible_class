@@ -1,0 +1,11 @@
+---
+- name: NAPALM Config Merge
+  hosts: nxos1:nxos2
+  tasks: 
+    - napalm_install_config:
+        provider: "{{ creds }}"
+        config_file: "CFGS/{{ inventory_hostname }}-ip.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+
