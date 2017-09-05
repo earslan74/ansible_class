@@ -1,0 +1,13 @@
+---
+- name: Configure NTP Servers on NXOS
+  hosts: nxos
+  gather_facts: False
+
+  tasks:
+    - name: Configure NTP servers
+      nxos_config:
+        provider: "{{ creds }}"
+        lines:
+          - "ntp server {{ ntp1 }}"
+          - "ntp server {{ ntp2 }}"
+      tags: ntp_config  

@@ -1,0 +1,38 @@
+---
+- name: Set Operations via Jinja2 filters
+  hosts: local
+  vars:
+    var1: hello
+    var2: world
+    my_dict:
+      key1: aaa
+      key2: bbb
+      key3: ccc
+    my_list: 
+      - apple
+      - orange
+      - pear
+      - mango
+      - fig
+      - strawberry
+      - orange
+      - apple
+    my_list2:
+      - orange
+      - 3
+      - 77
+      - Arista
+      - mango
+    device: Cisco
+  
+  tasks:
+    - name: Combine two dictionaries - Add elements to the dictionary
+      debug:
+        msg: "{{ my_dict | combine({'Ali': 10, 'Ahmet': 12, 'Susan': 14}) }}"
+      tags: combine
+
+    - name: Extract values from a dictionary
+      debug: 
+        msg: "{{ ['key1', 'key2'] | map('extract', my_dict) | list }}" # Extract the values correcponfing to key1 and key2 and put 
+# them in a list
+      tags: extract 

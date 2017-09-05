@@ -1,0 +1,54 @@
+---
+- name: Set Operations via Jinja2 filters
+  hosts: local
+  vars:
+    var1: hello
+    var2: world
+    my_dict:
+      key1: aaa
+      key2: bbb
+      key3: ccc
+    my_list: 
+      - apple
+      - orange
+      - pear
+      - mango
+      - fig
+      - strawberry
+      - orange
+      - apple
+    my_list2:
+      - orange
+      - 3
+      - 77
+      - Arista
+      - mango
+    device: Cisco
+  
+  tasks:
+    - name: Set operation (unique) 
+      debug:
+        msg: "{{ my_list | unique }}" # Get rid of the duplicate elements of the list
+      tags: unique
+
+    - name: Set operation (union)
+      debug: 
+        msg: "{{ my_list | union(my_list2) }}" # Merges the 2 lists (gives the union of the 2 sets)
+      tags: union
+
+    - name: Set operation (intersection)
+      debug:
+        msg: "{{ my_list | intersect(my_list2) }}" # Gives the intersection of 2 sets
+      tags: intersect
+
+    - name: Set operation (Difference) - Unique items in my_list, not in my_list2
+      debug: 
+        msg: "{{ my_list | difference(my_list2) }}"
+      tags: diff
+
+    - name: Set operation, unique items in each list
+      debug:
+        msg: "{{ my_list | symmetric_difference(my_list2) }}"
+      tags: sym_diff
+
+   

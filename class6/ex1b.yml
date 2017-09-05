@@ -1,0 +1,13 @@
+---
+- name: File Lookup
+  hosts: cisco
+  gather_facts: False
+  vars: 
+    sh_ver: "{{ lookup('file', './{{ inventory_hostname }}-shver.txt') }}"
+
+  tasks:
+    - name: Display the show version output 
+      debug:
+        var: sh_ver.splitlines()
+      tags: sh_ver
+

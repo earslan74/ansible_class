@@ -1,0 +1,24 @@
+---
+- name: Copy the show version output
+  hosts: cisco
+  gather_facts: False
+  vars:
+    filename: "./{{ inventory_hostname }}-shver.txt"
+
+  tasks:
+    - name: Get show version
+      ios_command:
+        provider: "{{ creds }}"
+        commands: show version
+      tags: sh_ver
+      register: sh_ver
+
+    - name: Set to a new variable
+      set_fact:
+        sh_ver_new: "{{ sh_ver.stdout[0] }}"
+ 
+    - name: Copy the output to the file
+      copy:
+        content: "{{ sh_ver_new }}"
+        dest: "{{ filename }}"
+      tags: copy_tofile

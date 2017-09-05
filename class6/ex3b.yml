@@ -1,0 +1,45 @@
+---
+- name: Verify the NTP Servers on NXOS
+  hosts: nxos
+  gather_facts: False
+
+  tasks:
+    - name: Napalm Get NTP Servers
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+        filter: "ntp_servers"
+      tags: ntp_servers
+
+    - name: Extract the NTP Server IP Addresses
+      set_fact:
+        ntp_servers: "{{ lookup('template', './convert_ntp.j2') | from_yaml }}"
+
+    - name: Display the NTP Servers
+      debug:
+        var: ntp_servers
+
+    - name: Convert the NTP servers string to a list
+      set_fact:
+        ntp_list: "{{ ntp_servers.split() }}"
+
+    - name: Display the NTP Server List
+      debug:
+        var: ntp_list
+
+    - name: Verify the NTP servers
+      set_fact:
+        ntp_diff: "{{ ntp_list | difference(ntp_baseline) }}"
+
+    - name: Display the NTP Differences
+      debug:
+        var: ntp_diff
+      when: ntp_diff != []
+ 
+    - name: Remove the NTP Server Baseline Differences
+      nxos_config:
+        provider: "{{ creds }}"
+        lines: 
+          - "no ntp server {{ item }}"
+      with_items: "{{ ntp_diff }}"
+      when: ntp_diff != []
+

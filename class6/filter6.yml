@@ -1,0 +1,40 @@
+---
+- name: Ternary Operations via Jinja2 filters
+  hosts: local
+  vars:
+    var1: hello
+    var2: world
+    my_dict:
+      key1: aaa
+      key2: bbb
+      key3: ccc
+    my_list: 
+      - apple
+      - orange
+      - pear
+      - mango
+      - fig
+      - strawberry
+      - orange
+      - apple
+    my_list2:
+      - orange
+      - 3
+      - 77
+      - Arista
+      - mango
+    device: Cisco
+  
+  tasks:
+    - name: Ternary Operation
+      debug:
+        msg: "{{ (device == 'Cisco') | ternary('answer1', 'answer2') }}"
+    # If the device is Cisco, you'll get answer1, otherwise answer2 
+    - name: Cast string as boolean
+      debug:
+        msg: "{{ 'no' | bool }}"
+
+    - name: Use regex_replace
+      debug:
+        msg: "{{ 'Some big string to parse' | regex_replace('^Some\\s+(big.*)$', '\\1 test') }}"
+    # whatever inside the paranthesis will be taken via \1 and  ' test' string will be added

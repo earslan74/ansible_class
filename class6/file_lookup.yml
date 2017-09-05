@@ -1,0 +1,23 @@
+---
+- name: Lookup From a file
+  hosts: local # Will be run on the local machine
+  vars: 
+    contents: "{{ lookup('file', './show_arp.txt') }}" # Assign the contents of show_arp.txt file to the variable contents
+
+  tasks:
+    - name: Display the ARP table
+      debug: 
+        msg: "ARP Table is:\n\n{{ contents }}"
+      tags: display_arp
+
+    - name: Display ARP Table (more readable)
+      debug: 
+        var: contents.splitlines() # contents is a string variable; and splitlines() is a string method which transforms the string 
+# to a list based on the carriage return character. (There are other methods which can be applied to the variables.
+      tags: nice_arp
+
+    - name: Display the 4th line of the table with some parsing
+      debug:
+        var: contents.splitlines()[3].split() # split() is the method which split the words by the white spaces
+      tags: 4th_arp
+

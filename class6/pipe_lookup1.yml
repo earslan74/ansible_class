@@ -1,0 +1,24 @@
+---
+- name: Pipe Lookup - Execute a system command
+  hosts: local # Will be run on the local machine
+  vars: 
+    who: "{{ lookup('pipe', 'whoami') }}" # whoami command will be executed and the output will be assigned to the who variable
+    ans_hosts: "{{ lookup('pipe', 'cat ~/ansible-hosts') }}" # display the ansible-hosts file and assign to the variable
+    show_arp: "{{ lookup('pipe', 'netmiko-show --cmd \"show arp\" pynet_rtr1') }}" 
+
+  tasks:
+    - name: Display whoami output
+      debug: 
+        msg: "WhoAmI is:\n\n{{ who }}"
+      tags: whoami
+
+    - name: Display ansible hosts file
+      debug: 
+        var: ans_hosts.splitlines() 
+      tags: ans_hosts
+
+    - name: Display the ARP Table of pynet-rtr1
+      debug:
+        var: show_arp.splitlines()
+      tags: show_arp
+

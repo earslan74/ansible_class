@@ -1,0 +1,38 @@
+---
+- name: Network Template Lookup
+  hosts: cisco
+  vars:
+    creds: 
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+    creds_napalm:
+      host: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      dev_os: ios
+
+  tasks:
+    - name: NAPALM Get Arp table
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+        filter: "arp_table"
+
+    - name: Retrieve ARP Table IP-MAC pair as a String
+      debug:
+        msg: "{{ lookup('template', './convert_napalm_arp.j2') }}"
+      tags: str_arp
+
+    - name: Convert napalm arp data structure
+      debug:
+        msg: "{{ lookup('template', './convert_napalm_arp.j2') | from_yaml }}" # from_yaml is a jinja2 filter
+
+    - name: Assign the new data structure to a new variable
+      set_fact:
+        new_arp: "{{ lookup('template', './convert_napalm_arp.j2') | from_yaml }}" # new_arp is a dictionary of IP:mac pairs
+
+    - name: Print out the Mac of an IP
+      debug:
+        var: new_arp['10.220.88.1']
+        
+

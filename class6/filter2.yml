@@ -1,0 +1,30 @@
+---
+- hosts: local
+  vars:
+    var1: hello
+    var2: world
+    my_dict:
+      key1: aaa
+      key2: bbb
+      key3: ccc
+    my_list: 
+      - apple
+      - orange
+      - pear
+      - mango
+      - fig
+      - strawberry
+      - orange
+      - apple
+    my_list2:
+      - orange
+      - 3
+      - 77
+      - Arista
+    device: Cisco
+  
+  tasks:
+    - name: Use a default value
+      debug:
+        msg: "{{ var3 | default('Var3 not defined') }}"
+   

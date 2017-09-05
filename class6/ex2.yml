@@ -1,0 +1,33 @@
+---
+- name: NAPALM Generate a new Mac address table
+  hosts: pynet-sw8
+  gather_facts: False
+
+  tasks:
+    - name: Napalm Mac address table
+      napalm_get_facts:
+        provider: "{{ creds }}"
+        filter: "mac_address_table"
+      tags: nap_mac_table
+
+    - name: Display Raw ARP Table
+      debug:
+        var: napalm_mac_address_table
+      
+    - name: Retrieve Mac address table as a string
+      debug:
+        msg: "{{ lookup('template', './convert_napalm_mac.j2') }}" 
+
+    - name: Convert the data structure to a YAML dict and assign to a variable
+      set_fact:
+        new_mac: "{{ lookup('template', './convert_napalm_mac.j2') | from_yaml }}"
+
+    - name: Display the new MAC address table dictionary
+      debug:
+        var: new_mac
+
+    - name: Copy the new mac to a file
+      copy: 
+        content: "{{ new_mac }}"
+        dest: "./{{ inventory_hostname }}-mac.txt"
+      tags: copy_to_file

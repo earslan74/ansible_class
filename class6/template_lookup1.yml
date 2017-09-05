@@ -1,0 +1,32 @@
+---
+- name: Template Lookup
+  hosts: cisco
+  vars: 
+    my_dict:
+      ethernet1: 10.1.1.1
+      ethernet2: 10.2.2.2
+      ethernet3: 10.3.3.3
+      ethernet4: 10.4.4.4
+      ethernet5: 10.5.5.5
+    my_list: 
+      - apple
+      - orange
+      - kiwi
+      - fig
+      - apricot
+      - mango
+  tasks:
+    - name: Just read data from the template file
+      debug: 
+        msg: "{{ lookup('template', './simple_template.j2') }}"
+      tags: simple_template
+
+    - name: Process list in a template
+      debug:
+        msg: "{{ lookup('template', './process_list.j2') }}"
+      tags: process_list
+
+    - name: Process dictionary in a template
+      debug:
+        msg: "{{ lookup('template', './process_dict.j2') }}"
+      tags: process_dict
