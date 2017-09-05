@@ -1,0 +1,5 @@
+---
+- ios_config:
+    provider: "{{ creds_ssh }}"
+    lines: "{{ global_config }}"
+
