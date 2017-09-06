@@ -1,0 +1,14 @@
+---
+- name: Configuration templating using include statememnt
+  hosts: localhost
+  gather_facts: False
+  tasks: 
+    - name: Generate Configuration files
+      template: 
+        src: access_switch_1.j2
+        dest: "./CFGS/{{ item.hostname }}.txt"
+      with_items:
+        - {hostname: pynet-rtr1, default_gateway: 10.10.10.1, 
+           ip_addr: 10.10.10.10, netmask: 255.255.255.0}
+        - {hostname: pynet-rtr2, default_gateway: 10.10.20.1, 
+           ip_addr: 10.10.20.10, netmask: 255.255.255.0}

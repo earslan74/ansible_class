@@ -1,0 +1,5 @@
+---
+- name: Generate the DNS Template
+  template:
+    src: dns.j2
+    dest: "./CFGS/{{ inventory_hostname }}.txt"
