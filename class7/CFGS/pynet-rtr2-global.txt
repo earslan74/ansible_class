@@ -1,0 +1,8 @@
+ip domain name bogus1.com
+!
+ip name-server 8.8.8.8
+ip name-server 8.8.4.4
+!
+ntp server 88.1.2.77
+ntp server 88.1.9.33
+

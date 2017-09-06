@@ -1,0 +1,10 @@
+---
+- name: Generate config template
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Generate the BGP Configs
+      template:
+        src: ex2a_template.j2
+        dest: "./CFGS/{{ inventory_hostname }}-bgp.txt"
+      tags: gen_config

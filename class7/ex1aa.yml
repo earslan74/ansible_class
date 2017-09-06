@@ -1,0 +1,10 @@
+---
+- name: Generate config template
+  hosts: cisco:nxos:arista
+  gather_facts: False
+  tasks:
+    - name: Generate the Global configs for the devices
+      template:
+        src: ex1a_template2.j2
+        dest: "./CFGS/{{ inventory_hostname }}.txt"
+      tags: gen_config

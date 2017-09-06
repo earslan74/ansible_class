@@ -1,0 +1,9 @@
+---
+as_no: 22
+bgp_int: 
+  name: "Ethernet2/2" 
+  local_ip: "2001:db8:aa77:200c::2"
+  mask: 64
+  peer_ip: "2001:db8:aa77:200c::1"
+  remote_as: 22
+  

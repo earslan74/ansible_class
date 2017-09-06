@@ -1,0 +1,7 @@
+interface {{ bgp_int.name }}                             
+  ipv6 address {{ bgp_int.local_ip }}/{{ bgp_int.mask }}      
+  no shutdown
+!
+router bgp {{ as_no }}
+  neighbor {{ bgp_int.peer_ip }} remote-as {{ bgp_int.remote_as }}
+    address-family ipv6 unicast
