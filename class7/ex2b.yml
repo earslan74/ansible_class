@@ -1,0 +1,49 @@
+---
+- name: Generate config template
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Generate the BGP Configs
+      template:
+        src: ex2a_template.j2
+        dest: "./CFGS/{{ inventory_hostname }}-bgp.txt"
+      tags: gen_config
+
+    - name: Push config to NXOS Switches
+      napalm_install_config:
+        provider: "{{ creds_napalm }}"
+        config_file: "./CFGS/{{ inventory_hostname }}-bgp.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "./DIFFS/{{ inventory_hostname }}.txt"
+      tags: push_nxos
+
+    - name: Wait for 10 secs
+      pause:
+        seconds: 10
+
+    - name: Verify IP Connectivity
+      nxos_command:
+        provider: "{{ creds_ssh }}"
+        commands: "ping6 {{ bgp_int.peer_ip }}"
+      tags: ping
+      register: output
+
+    - name: Evaluate the Ping Result
+      set_fact:
+        ping_reply: "{{ output.stdout[0].split(',')[-2].lstrip().split()[0] | int }}"
+      tags: ping
+
+    - name: Display Ping Output
+      debug:
+        var: ping_reply
+      tags: ping
+
+    - name: Verify the Ping Result
+      assert:
+        that: ping_reply >= 1
+        msg: "No ping connectivity between NXOS switches!"
+      tags: ping
+
+
+

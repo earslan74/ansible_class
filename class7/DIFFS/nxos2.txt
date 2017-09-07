@@ -1,0 +1,2 @@
+interface Ethernet2/2                             
+  ipv6 address 2001:db8:aa77:200c::2/64      
