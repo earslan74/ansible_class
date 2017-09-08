@@ -1,8 +1,0 @@
-ip domain-name bogus1.com
-!
-ip name-server vrf default 8.8.8.8
-ip name-server vrf default 8.8.4.4
-!
-ntp server 1.11.2.1
-ntp server 2.11.9.17
-

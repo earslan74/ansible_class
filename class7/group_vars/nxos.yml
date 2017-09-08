@@ -25,3 +25,8 @@ creds_napalm:
   optional_args:
     port: 8443
 
+vrfs: 
+  - "management"
+  - "red1"
+  - "red2"
+  - "red3"

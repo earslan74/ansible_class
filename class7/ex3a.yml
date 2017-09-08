@@ -1,0 +1,12 @@
+---
+- name: Generate NXOS Templates
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Generate the templates
+      template:
+        src: ex3a_template.j2
+        dest: "./CFGS/{{ inventory_hostname }}-base.txt"
+      tags: gen_config
+
+     

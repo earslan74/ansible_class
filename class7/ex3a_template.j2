@@ -1,0 +1,33 @@
+
+{% for vrf in vrfs %}
+vrf context {{ vrf }}
+{% if vrf == "management" %}
+  ip route 0.0.0.0/0 {{ mgmt_gateway }}
+{% endif %}
+{% endfor %}
+
+interface {{ mgmt_if.name }}
+  vrf member management
+  ip address {{ mgmt_if.ip }}/{{ mgmt_if.mask }}
+
+interface Vlan1
+
+{% for intf in range(1,49) %}
+{%- set port = 'Ethernet2/' + intf|string -%}
+interface {{ port }}
+{% if intf in range(1,5) %}
+  no switchport
+  mac-address {{ mac_address }}
+  ip address {{ ip_interfaces[port] }}
+  no shutdown
+{% elif intf in range(5,8) %}
+  no switchport
+  mac-address {{ mac_address }}
+  no shutdown  
+{% else %}
+  shutdown
+  no switchport
+  mac-address {{ mac_address }} 
+{% endif %}
+
+{% endfor %}

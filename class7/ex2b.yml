@@ -31,7 +31,7 @@
 
     - name: Evaluate the Ping Result
       set_fact:
-        ping_reply: "{{ output.stdout[0].split(',')[-2].lstrip().split()[0] | int }}"
+        ping_reply: "{{ output.stdout[0].split(',')[-2].lstrip().split()[0] }}" 
       tags: ping
 
     - name: Display Ping Output
@@ -39,11 +39,32 @@
         var: ping_reply
       tags: ping
 
-    - name: Verify the Ping Result
+    - name: Check out IPV6 BGP Session
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+        filter: "bgp_neighbors"
+      tags: bgp
+
+    - name: Display BGP Neighbors
+      debug:
+        var: napalm_bgp_neighbors
+      tags: bgp
+
+    - name: Get the IPv6 BGP Session State
+      set_fact:
+        session_state: "{{ napalm_bgp_neighbors['global']['peers'][bgp_int.peer_ip]['is_up'] }}"
+      tags: bgp
+
+    - name: Print the Session State
+      debug:
+        var: session_state
+      tags: bgp
+
+    - name: Verify the IPV6 Connectivity & BGP Session State
       assert:
-        that: ping_reply >= 1
-        msg: "No ping connectivity between NXOS switches!"
-      tags: ping
-
-
+        that: 
+          - ping_reply|int >= 1
+          - session_state == true
+        msg: "Session with {{ bgp_int.peer_ip }} is DOWN!"
+      tags: bgp
 

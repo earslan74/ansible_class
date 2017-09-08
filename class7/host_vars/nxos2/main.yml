@@ -7,3 +7,17 @@ bgp_int:
   peer_ip: "2001:db8:aa77:200c::1"
   remote_as: 22
   
+mgmt_gateway: "10.0.0.2"
+
+mgmt_if:
+  name: "mgmt0"
+  ip: "10.0.0.72"
+  mask: 24
+
+mac_address: "2cc2.607d.5725"
+
+ip_interfaces:
+  Ethernet2/1: "10.10.10.2/24"
+  Ethernet2/2: "10.10.20.2/24"
+  Ethernet2/3: "10.12.13.15/24"
+  Ethernet2/4: "10.10.40.2/24"
