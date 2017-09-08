@@ -1,9 +1,14 @@
+ip domain-name bogus1.com
+ip name-server 8.8.8.8 8.8.4.4
+ntp server 130.126.24.24
+ntp server 152.2.21.1
 
 vrf context management
   ip route 0.0.0.0/0 10.0.0.2
 vrf context red1
 vrf context red2
 vrf context red3
+
 
 interface mgmt0
   vrf member management

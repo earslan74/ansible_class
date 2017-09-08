@@ -1,0 +1,6 @@
+{% for vrf in vrfs %}
+vrf context {{ vrf }}
+{% if vrf == "management" %}
+  ip route 0.0.0.0/0 {{ mgmt_gateway }}
+{% endif %}
+{% endfor %}
