@@ -1,0 +1,14 @@
+---
+- name: Test Connection to IOS Devices
+  hosts: cisco
+  gather_facts: False
+  tasks:
+    - name: Gather facts from IOS Devices
+      ios_facts:
+        provider: "{{ creds_ssh }}"
+      tags: cisco
+      register: output
+
+    - name: Display the The IOS Facts
+      debug:
+        var: output 

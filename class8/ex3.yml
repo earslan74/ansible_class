@@ -1,0 +1,35 @@
+---
+- name: New VLANs on EOS and Validation
+  hosts: arista
+  gather_facts: False
+  vars:
+    vlan_dict:
+       500: { name: "blue500" } 
+       501: { name: "blue501" }
+       502: { name: "blue502" }
+       503: { name: "blue503" }
+       504: { name: "blue504" } 
+    default_vlan:
+       1: { name: "default" } 
+  tasks:
+    - name: Display the Existing VLANs
+      eos_command:
+        provider: "{{ creds_eapi }}"
+        commands: show vlan
+      tags: eos
+      register: vlans
+
+    - name: Set Facts
+      set_fact:
+        vl: "{{ vlans.stdout_lines[0].vlans }}"
+
+    - name: Display the VLANs
+      debug:
+        var: vl.keys()
+
+    - name: Display VLANs to be configured
+      debug:
+        var: vlan_dict.keys()
+
+   
+

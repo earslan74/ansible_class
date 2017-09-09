@@ -1,0 +1,28 @@
+---
+- name: Test Connection to IOS Devices
+  hosts: cisco
+  gather_facts: False
+  tasks:
+    - name: Gather facts from IOS Devices
+      ios_facts:
+        provider: "{{ creds_ssh }}"
+      tags: cisco
+
+- name: Test Connection to NXOS Devices
+  hosts: nxos
+  gather_facts: False
+  tasks:
+    - name: Gather facts from NXOS Devices
+      nxos_facts:
+        provider: "{{ creds_nxapi }}"
+      tags: nxos
+
+- name: Test Connection to EOS Devices
+  hosts: arista
+  gather_facts: False
+  tasks:
+    - name: Gather facts from EOS Devices
+      eos_facts:
+        provider: "{{ creds_eapi }}"
+      tags: eos
+
