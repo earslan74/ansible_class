@@ -1,0 +1,63 @@
+---
+- name: Configure and Validate VLANs
+  hosts: pynet-sw7
+  vars:
+    vlans:
+        - vlan_id: "1"
+          vlan_name: default
+        - vlan_id: "333"
+          vlan_name: blue333
+        - vlan_id: "335"
+          vlan_name: blue335
+        - vlan_id: "336"
+          vlan_name: blue336
+        - vlan_id: "337"
+          vlan_name: blue337
+        - vlan_id: "338"
+          vlan_name: blue338
+
+  tasks:
+    - name: Verify NAPALM connectivity
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+
+    - name: Generate config file from template
+      template:
+        src: vlans.j2
+        dest: "./CFGS/{{ inventory_hostname }}-vlans.txt"
+
+    - name: Configure VLANs
+      napalm_install_config:
+        provider: "{{ creds_napalm }}"
+        config_file: "./CFGS/{{ inventory_hostname }}-vlans.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+
+    - name: Verify only specified VLANs are configured
+      eos_command:
+        provider: "{{ creds_core_eapi }}"
+        commands: show vlan
+      register: current_vlans
+
+    - name: Process output show vlan data from switch
+      set_fact:
+        current_vlans: "{{ current_vlans.stdout[0].vlans }}"
+
+    - name: Construct list of VLANs currently configured
+      set_fact:
+        vlan_list: "{{ vlan_list | default([]) + [ item ] }}"
+      with_items: "{{ current_vlans.keys() }}"
+
+    - name: VLANs that should be configured
+      set_fact:
+        vlans_intended: "{{ vlans | map(attribute='vlan_id') | list }}"
+
+    - name: VLANs configured and intended should be identical
+      set_fact:
+        vlan_error: "{{ vlans_intended | symmetric_difference(vlan_list) | list }}"
+
+    - name: Test whether VLANs are identical
+      assert:
+        that:
+          - "vlan_error == []"
