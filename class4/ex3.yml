@@ -1,0 +1,45 @@
+---
+- name: Configure Loopback on IOS
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks:
+    - name: Configure Loopback
+      ios_config:
+        provider: "{{ creds_ssh }}"
+        parents: ["interface Loopback{{ item.loop_no }}"]
+        lines:
+          - "ip address {{ item.ipv4 }} {{ item.ipv4_mask }}"
+          - "ipv6 address {{ item.ipv6 }}/{{ item.ipv6_mask }}"
+        backup: yes
+      with_items: "{{ Loopbacks }}"
+      tags: ios
+ 
+- name: Configure Loopback on NXOS
+  hosts: nxos1
+  gather_facts: False
+  tasks:
+    - name: Configure Loopback
+      nxos_config:
+        provider: "{{ creds_ssh }}"
+        parents: ["interface Loopback{{ item.loop_no }}"]
+        lines:
+          - "ip address {{ item.ipv4 }}/{{ item.ipv4_mask }}"
+          - "ipv6 address {{ item.ipv6 }}/{{ item.ipv6_mask }}"
+        backup: yes
+      with_items: "{{ Loopbacks }}"
+      tags: nxos
+
+- name: Configure Loopback on EOS
+  hosts: pynet-sw5
+  gather_facts: False
+  tasks:
+    - name: Configure Loopback
+      eos_config:
+        provider: "{{ creds_eapi }}"
+        parents: ["interface Loopback{{ item.loop_no }}"]
+        lines:
+          - "ip address {{ item.ipv4 }} {{ item.ipv4_mask }}"
+          - "ipv6 address {{ item.ipv6 }}/{{ item.ipv6_mask }}"
+        backup: yes
+      with_items: "{{ Loopbacks }}"
+      tags: eos

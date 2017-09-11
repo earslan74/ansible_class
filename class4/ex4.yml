@@ -1,0 +1,10 @@
+---
+- name: Configure IOS SNMP Info
+  hosts: cisco
+  gather_facts: False
+  tasks:
+    - name: Configure SNMP Contact & Location
+      ios_config:
+        provider: "{{ creds_ssh }}" # This variable is in group_vars file
+        lines: "{{ snmp_config }}" # This variable is in the group_vars file
+      tags: ios_snmp

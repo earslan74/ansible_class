@@ -8,10 +8,7 @@ transceiver qsfp default-mode 4x10G
 hostname pynet-sw5
 ip name-server vrf default 8.8.4.4
 ip name-server vrf default 8.8.8.8
-ip domain-name twb-tech.com
 !
-ntp server 1.11.2.1
-ntp server 2.11.9.17
 ntp server 130.126.24.24
 !
 spanning-tree mode mstp
@@ -26,21 +23,6 @@ username eapi secret 5 $1$Kt0.fwmk$5Q14WW76.w5xBIHwMHNX0/
 username pyclass privilege 15 secret 5 $1$C3VfUfcO$86t4iqCX60yW.NIR8d2Lh0
 !
 clock timezone America/Los_Angeles
-!
-vlan 583
-   name ANS583
-!
-vlan 584
-   name ANS584
-!
-vlan 585
-   name ANS585
-!
-vlan 586
-   name ANS586-TEST
-!
-vlan 587
-   name ANS587
 !
 interface Ethernet1
    spanning-tree portfast
@@ -57,6 +39,10 @@ interface Ethernet6
 !
 interface Ethernet7
 !
+interface Loopback12
+   ip address 1.1.1.99/24
+   ipv6 address 2001:db8::aaaa:99/32
+!
 interface Management1
    shutdown
 !
@@ -64,10 +50,6 @@ interface Vlan1
    ip address 10.220.88.32/24
 !
 ip route 0.0.0.0/0 10.220.88.1
-ip route 1.1.88.10/32 10.220.88.1
-ip route 1.1.88.11/32 10.220.88.1
-ip route 1.1.88.12/32 10.220.88.1
-ip route 1.1.88.13/32 10.220.88.1
 !
 ip routing
 !

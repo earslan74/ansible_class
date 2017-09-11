@@ -1,0 +1,7 @@
+---
+Loopbacks:
+  - loop_no: 12
+    ipv4: "1.1.1.99"
+    ipv4_mask: "255.255.255.255"
+    ipv6: "2001:db8::aaaa:99"
+    ipv6_mask: 128

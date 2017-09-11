@@ -1,9 +1,9 @@
 Building configuration...
 
-Current configuration : 5675 bytes
+Current configuration : 5705 bytes
 !
-! Last configuration change at 08:01:14 PDT Sun Jul 23 2017 by pyclass
-! NVRAM config last updated at 12:05:10 PDT Sun Jul 23 2017 by pyclass
+! Last configuration change at 09:33:36 PDT Mon Sep 11 2017 by pyclass
+! NVRAM config last updated at 04:15:53 PDT Mon Sep 11 2017 by pyclass
 !
 version 15.4
 no service pad
@@ -106,7 +106,6 @@ ip ssh version 2
 ip ssh pubkey-chain
   username testuser
    key-hash ssh-rsa E5D7E26A603DD18923113E45F29BDF22 ktbyers@twb-tech.com
-ip scp server enable
 ! 
 !
 crypto isakmp policy 10
@@ -164,6 +163,10 @@ crypto map CRYPTO 50 ipsec-isakmp
 !
 !
 !
+!
+interface Loopback3
+ ip address 1.1.1.88 255.255.255.255
+ ipv6 address 2001:DB8::AAAA:1/32
 !
 interface FastEthernet0
  no ip address
@@ -231,8 +234,6 @@ line vty 0 4
 scheduler max-task-time 5000
 ntp server 130.126.24.24
 ntp server 152.2.21.1
-ntp server 88.1.9.33
-ntp server 88.1.2.77
 onep
  transport type tls localcert TP-self-signed-1429897839 disable-remotecert-validation
  service set vty
