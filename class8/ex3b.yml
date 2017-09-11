@@ -64,5 +64,13 @@
     - name: Unapproved VLANs configured on the switch
       debug:
         var: vlan_diff
-      failed_when: vlan_diff
+      when: vlan_diff
+
+    - name: Remove VLAN Differences
+      eos_config:
+        provider: "{{ creds_eapi }}"
+        lines:
+          - "no vlan {{ item }}"
+      with_items: "{{ vlan_diff }}"
+      tags: delete_vlan
       when: vlan_diff
