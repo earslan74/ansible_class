@@ -1,0 +1,43 @@
+vlan 700
+   name green700
+vlan 701
+   name green701
+vlan 702
+   name green702
+vlan 703
+   name green703
+vlan 704
+   name green704
+vlan 705
+   name green705
+vlan 706
+   name green706
+!
+interface Ethernet2
+   switchport access vlan 700
+   switchport mode access
+!
+interface Ethernet3
+   switchport mode trunk
+   switchport trunk native vlan 1
+   switchport trunk allowed vlan all
+!
+interface Ethernet4
+   switchport access vlan 705
+   switchport mode access
+!
+interface Ethernet5
+   switchport access vlan 702
+   switchport mode access
+!
+interface Ethernet6
+   switchport mode trunk
+   switchport trunk native vlan 1
+   switchport trunk allowed vlan 701-706
+!
+interface Ethernet7
+   switchport mode trunk
+   switchport trunk native vlan 700
+   switchport trunk allowed vlan 700,701
+!
+
