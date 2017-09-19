@@ -1,0 +1,35 @@
+---
+- name: Configure BGP
+  hosts: pynet-sw5:pynet-rtr1
+  gather_facts: False
+  tasks:
+    - name: Verify Connectivity (NAPALM)
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+
+    - name: Generate BGP Configs
+      template:
+        src: "bgp-{{ platform }}.j2"
+        dest: "CFGS/{{ inventory_hostname }}/3-bgp.txt"
+      tags: gen_template
+
+#    - name: Generate Switchport Configs
+#      template:
+#        src: switchport.j2
+#        dest: "CFGS/{{ inventory_hostname }}/2-switchport.txt"
+#      tags: gen_template
+#
+#    - name: Join the VLAN and Port Config Files
+#      assemble:
+#        src: "CFGS/{{ inventory_hostname }}/"
+#        dest: "CFGS/{{ inventory_hostname }}.txt"
+#      tags:
+#        - gen_template    
+
+#    - name: Install VLANs & Port Configs
+#      napalm_install_config:
+#        provider: "{{ creds_napalm }}"
+#        config_file: "CFGS/{{ inventory_hostname }}.txt"
+#        commit_changes: True
+#        replace_config: False
+#        diff_file: "DIFFS/{{ inventory_hostname }}.txt"

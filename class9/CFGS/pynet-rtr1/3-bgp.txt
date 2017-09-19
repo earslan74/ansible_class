@@ -1,0 +1,9 @@
+router bgp 42
+  network 1.1.50.0 mask 255.255.255.0
+  network 1.1.51.0 mask 255.255.255.0
+  neighbor 10.220.88.32 remote-as 18
+!
+ip route 1.1.50.0 255.255.255.0 Null0
+ip route 1.1.51.0 255.255.255.0 Null0
+
+

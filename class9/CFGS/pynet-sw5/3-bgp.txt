@@ -1,0 +1,6 @@
+router bgp 18
+   neighbor 10.220.88.20 remote-as 42
+   neighbor 10.220.88.20 maximum-routes 12000
+   network 2.2.2.0/24
+!
+ip route 2.2.2.0/24 Null0
