@@ -1,11 +1,23 @@
 ---
 - name: Configure BGP
-  hosts: pynet-sw5:pynet-rtr1
+  hosts: pynet-sw5:pynet-rtr1:pynet-sw6
   gather_facts: False
   tasks:
     - name: Verify Connectivity (NAPALM)
       napalm_get_facts:
         provider: "{{ creds_napalm }}"
+
+    - name: Remove Device Folders From CFGS directory
+      file:
+        path: "CFGS/{{ inventory_hostname }}/"
+        state: absent
+      tags: rm_folders
+
+    - name: Create the Fresh Device Folders In the CFGS directory
+      file:
+        path: "CFGS/{{ inventory_hostname }}/"
+        state: directory
+      tags: rm_folders
 
     - name: Generate BGP Configs
       template:
@@ -13,23 +25,18 @@
         dest: "CFGS/{{ inventory_hostname }}/3-bgp.txt"
       tags: gen_template
 
-#    - name: Generate Switchport Configs
-#      template:
-#        src: switchport.j2
-#        dest: "CFGS/{{ inventory_hostname }}/2-switchport.txt"
-#      tags: gen_template
-#
-#    - name: Join the VLAN and Port Config Files
-#      assemble:
-#        src: "CFGS/{{ inventory_hostname }}/"
-#        dest: "CFGS/{{ inventory_hostname }}.txt"
-#      tags:
-#        - gen_template    
+    - name: Assemble the configs
+# BGP config will be assembled to a file which will be pushed to the devices
+# Assemble is used here, in case there are new config sections added here in the future 
+      assemble:
+        src: "CFGS/{{ inventory_hostname }}/"
+        dest: "CFGS/{{ inventory_hostname }}.txt"
+      tags: gen_template
 
-#    - name: Install VLANs & Port Configs
-#      napalm_install_config:
-#        provider: "{{ creds_napalm }}"
-#        config_file: "CFGS/{{ inventory_hostname }}.txt"
-#        commit_changes: True
-#        replace_config: False
-#        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+    - name: Install BGP Configs
+      napalm_install_config:
+        provider: "{{ creds_napalm }}"
+        config_file: "CFGS/{{ inventory_hostname }}.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"

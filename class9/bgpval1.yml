@@ -1,0 +1,26 @@
+---
+- name: Configure BGP
+  hosts: pynet-sw5:pynet-rtr1:pynet-sw6
+  gather_facts: False
+  tasks:
+    - name: Verify Connectivity (NAPALM)
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+
+    - name: Verify BGP
+      napalm_get_facts:
+        provider: "{{ creds_napalm }}"
+        filter: bgp_neighbors
+
+    - name: Display the BGP Peers
+      debug:
+        msg: "{{ item.key }}"
+      with_dict: "{{ napalm_bgp_neighbors.global.peers }}"
+
+    - name: Copy BGP Peers
+      set_fact:
+        current_peers: "{{ current_peers | default([]) + [ item.key ] }}"
+      with_dict: "{{ napalm_bgp_neighbors.global.peers }}"
+
+
+

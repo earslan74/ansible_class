@@ -1,9 +1,13 @@
-router bgp 42
-  network 1.1.50.0 mask 255.255.255.0
-  network 1.1.51.0 mask 255.255.255.0
-  neighbor 10.220.88.32 remote-as 18
 !
-ip route 1.1.50.0 255.255.255.0 Null0
-ip route 1.1.51.0 255.255.255.0 Null0
-
-
+router bgp {{ bgp_as }}
+{% for net in announced_routes %}
+  network {{ net.prefix }} mask {{ net.mask }}
+{% endfor %}
+{% for peer in bgp_peers %}
+  neighbor {{ peer.peer_ip }} remote-as {{ peer.peer_as }}
+{% endfor %}
+!
+{% for route in static_routes %}
+ip route {{ route.prefix }} {{ route.mask }} {{ route.next_hop }}
+{% endfor %}
+!

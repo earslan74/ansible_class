@@ -1,6 +1,14 @@
-router bgp 18
-   neighbor 10.220.88.20 remote-as 42
-   neighbor 10.220.88.20 maximum-routes 12000
-   network 2.2.2.0/24
 !
-ip route 2.2.2.0/24 Null0
+router bgp {{ bgp_as }}
+{% for peer in bgp_peers %}
+   neighbor {{ peer.peer_ip }} remote-as {{ peer.peer_as }}
+   neighbor {{ peer.peer_ip }} maximum-routes {{ peer.maximum_routes }}
+{% endfor %}
+{% for net in announced_routes %}
+   network {{ net.prefix }}/{{ net.mask }}
+{% endfor %}
+!
+{% for route in static_routes %}
+ip route {{ route.prefix }}/{{ route.mask }} {{ route.next_hop}}
+{% endfor %}
+!
