@@ -1,0 +1,6 @@
+!
+{% for x in loo_if %}
+interface Loopback{{ x.id }}
+   ip address {{ x.ip }}/{{ x.mask }}
+!
+{% endfor %}

@@ -1,0 +1,30 @@
+---
+ospf_process: 42
+ospf_max_lsa: 12000
+
+loo_if:
+  - id: 150
+    ip: 172.31.77.150
+    mask: 32
+    ospf_enabled: True
+  - id: 151
+    ip: 172.31.77.151
+    mask: 32
+    ospf_enabled: True
+  - id: 152
+    ip: 172.31.77.152
+    mask: 32
+    ospf_enabled: True
+  - id: 153
+    ip: 172.31.77.153
+    mask: 32
+    ospf_enabled: True
+  - id: 154
+    ip: 172.31.77.154
+    mask: 32
+    ospf_enabled: True
+  - id: 155
+    ip: 172.31.77.155
+    mask: 32
+    ospf_enabled: True
+    

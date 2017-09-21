@@ -1,0 +1,9 @@
+router ospf {{ ospf_process }}
+   network 10.220.88.0/24 area 0.0.0.0
+{% for intf in loo_if %}
+{% if intf.ospf_enabled %}
+   network {{ intf.ip }}/{{ intf.mask }} area 0.0.0.{{ intf.id }}
+{% endif %}
+{% endfor %}
+   max-lsa {{ ospf_max_lsa }}
+!
