@@ -1,0 +1,21 @@
+---
+- name: OSPF on IOS Router
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks: 
+    - name: Configure OSPF
+      ios_config:
+        provider: "{{ creds_core_ssh }}"
+        parents: ["router ospf 42"]
+        lines:
+          - network 10.220.88.0 0.0.0.255 area 0
+        match: line
+      notify: write_mem
+
+  handlers:
+    - name: write_mem
+      ios_command:
+        provider: "{{ creds_core_ssh }}"
+        commands: write mem
+      changed_when: True
+      tags: wr_mem

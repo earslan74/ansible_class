@@ -1,0 +1,47 @@
+---
+- name: IOS Config Prompting
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks:
+    - name: Add a user
+      ios_config:
+        provider: "{{ creds_core_ssh }}"
+        lines:
+          - alias exec my_conft config terminal
+          - username ericlab1 secret 5 $1$ZIM7$rt0JgPlkTP3NgR7JxO0EI/
+      notify: write_mem
+      tags: add_user
+
+    - name: Check out the user
+      ios_command:
+        provider: "{{ creds_core_ssh }}"
+        commands: 
+          - sh run | inc ericlab1
+      register: result       
+
+    - name: Display the user output
+      debug:
+        msg: "{{ result }}"
+
+    - name: Set user_output variable
+      set_fact:
+        user_record: "{{ result.stdout[0] }}" 
+
+    - name: Remove the user (if exists)
+      ios_command:
+        provider: "{{ creds_core_ssh }}"
+        commands:
+          - my_conft
+          - { command: no username ericlab1, prompt: "Do you want to continue", answer: y }
+      changed_when: True
+      when: "'ericlab1' in user_record"
+      notify: write_mem
+      tags: rem_user 
+
+  handlers:
+    - name: write_mem
+      ios_command:
+        provider: "{{ creds_core_ssh }}"
+        commands: write mem
+      changed_when: True
+      tags: wr_mem

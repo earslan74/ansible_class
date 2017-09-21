@@ -1,0 +1,29 @@
+---
+- name: IOS Config Prompting
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks:
+    - name: Add a user
+      ios_config:
+        provider: "{{ creds_core_ssh }}"
+        lines:
+          - alias exec my_conft config terminal
+          - username ericlab1 secret 5 $1$ZIM7$rt0JgPlkTP3NgR7JxO0EI/
+      tags: add_user
+
+###    - name: Add 2nd user via ios-command module
+###      ios_command:
+###        provider: "{{ creds_core_ssh }}"
+###        commands:
+###          - my_conft
+###          - username earslan secret test123
+###      tags: add_user
+
+    - name: Remove the user
+      ios_command:
+        provider: "{{ creds_core_ssh }}"
+        commands:
+          - my_conft
+          - { command: no username ericlab1, prompt: "Do you want to continue", answer: y }
+      changed_when: True
+      tags: rem_user 

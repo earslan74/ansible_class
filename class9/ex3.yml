@@ -1,0 +1,16 @@
+---
+- name: Configure IOS Banner
+  hosts: pynet-rtr2
+  gather_facts: False
+  tasks:
+    - name: Install IOS Banner
+      ios_banner:
+        provider: "{{ creds_core_ssh }}"
+        banner: login
+        text: |
+          Test configuration a multiline banner
+          on IOS (configured from Ansible) 
+        state: present
+      tags: banner
+
+
