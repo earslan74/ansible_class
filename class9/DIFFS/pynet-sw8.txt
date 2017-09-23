@@ -1,4 +1,4 @@
-@@ -36,6 +36,18 @@
+@@ -36,6 +36,24 @@
  !
  interface Ethernet7
  !
@@ -14,6 +14,29 @@
 +interface Loopback153
 +   ip address 172.31.77.153/32
 +!
- interface Loopback154
-    ip address 172.31.77.154/32
++interface Loopback154
++   ip address 172.31.77.154/32
++!
++interface Loopback155
++   ip address 172.31.77.155/32
++!
+ interface Management1
+    shutdown
+ !
+@@ -46,6 +64,16 @@
+ !
+ ip routing
+ !
++router ospf 42
++   network 10.220.88.0/24 area 0.0.0.0
++   network 172.31.77.150/32 area 0.0.0.150
++   network 172.31.77.151/32 area 0.0.0.151
++   network 172.31.77.152/32 area 0.0.0.152
++   network 172.31.77.153/32 area 0.0.0.153
++   network 172.31.77.154/32 area 0.0.0.154
++   network 172.31.77.155/32 area 0.0.0.155
++   max-lsa 12000
++!
+ management api http-commands
+    no shutdown
  !
