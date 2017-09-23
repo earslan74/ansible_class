@@ -27,4 +27,6 @@ loo_if:
     ip: 172.31.77.155
     mask: 32
     ospf_enabled: True
-    
+ 
+ospf_peers:
+  - 10.220.88.20   

@@ -1,0 +1,134 @@
+---
+- name: Ensure clean configuration directory
+  hosts: pynet-sw8
+  gather_facts: False
+  tasks:
+    - name: "Remove the CFGs/device directory"
+      file:
+        path: "CFGS/{{ inventory_hostname }}"
+        state: absent
+      tags: remove_files
+
+    - name: "Recreate the CFGS/device directory"
+      file:
+        path: "CFGS/{{ inventory_hostname }}"
+        state: directory
+      tags: remove_files
+
+- name: OSPF on IOS Router
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks: 
+    - name: Configure OSPF
+      ios_config:
+        provider: "{{ creds_core_ssh }}"
+        parents: ["router ospf 42"]
+        lines:
+          - network 10.220.88.0 0.0.0.255 area 0
+        match: line
+      notify: 
+        - write_mem
+        - wait_for_10s
+
+  handlers:
+    - name: write_mem
+      ios_command:
+        provider: "{{ creds_core_ssh }}"
+        commands: write mem
+      changed_when: True
+      tags: wr_mem
+
+    - name: wait_for_10s
+      pause:
+        seconds: 10
+
+- name: Create EOS Loopbacks & OSPF
+  hosts: pynet-sw8
+  gather_facts: False
+  tasks:
+    - name: Create EOS Loopbacks Template
+      template:
+        src: "{{ inventory_hostname }}-loopback.j2"
+        dest: "CFGS/{{ inventory_hostname }}/1-interfaces.txt"
+      tags: gen_loop
+
+    - name: Create the OSPF Template
+      template:
+        src: "{{ inventory_hostname }}-ospf.j2"
+        dest: "CFGS/{{inventory_hostname }}/2-ospf.txt"
+      tags: gen_ospf
+
+    - name: Generate the assembled template
+      assemble:
+        src: "CFGS/{{ inventory_hostname }}/"
+        dest: "CFGS/{{ inventory_hostname }}.txt"
+      tags: assemble_temps
+
+    - name: Install EOS Loopbacks & OSPF Configs
+      napalm_install_config:
+        provider: "{{ creds_napalm }}"
+        config_file: "CFGS/{{ inventory_hostname }}.txt"
+        commit_changes: True
+        replace_config: False
+        diff_file: "DIFFS/{{ inventory_hostname }}.txt"
+      notify: wait_for_10s
+      tags: install_conf
+
+  handlers: 
+    - name: wait_for_10s
+      pause:
+        seconds: 10
+      
+- name: Validate OSPF
+  hosts: pynet-sw8
+  gather_facts: False
+  tasks:
+    - name: Check out OSPF Neighbors
+      eos_command:
+        provider: "{{ creds_core_eapi }}"
+        commands: show ip ospf neighbor vrf default
+      register: output
+      tags: sh_ospf 
+     
+    - name: Build the list of OSPF Neighbors
+      set_fact: 
+        ospf_current_peers: "{{ ospf_nei | default([]) + [ item.routerId ] }}"
+      with_items: "{{ output.stdout_lines[0].vrfs.default.instList['42'].ospfNeighborEntries }}"
+
+    - name: Print out the Current OSPF Neighbor list
+      debug:
+        var: ospf_current_peers
+
+    - name: Print out the Intended OSPF Neighbor List
+      debug:
+        var: ospf_peers
+
+    - name: Compare the current and the intended OSPF Neighbors
+      assert:
+        that: 
+          - "{{ ospf_peers | symmetric_difference(ospf_current_peers) | list }} == []"
+        msg: "Intended and Current Peers differ!"
+
+- name: Test Reachability via Ping
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks:
+    - name: Ping Loopbacks
+      napalm_ping:
+        provider: "{{ creds_napalm }}"
+        destination: "{{ item }}"
+      with_items: "{{ peer_ips }}"
+      register: output
+      tags: ping
+   
+    - name: Record Ping Results
+      set_fact:
+        reach: "{{ reach | default({}) | combine({item.item: item.results.keys()[0]}) }}"
+      with_items: "{{ output.results }}"
+      tags: ping
+
+    - name: Display Ping Results
+      debug:
+        var: reach
+      tags: ping
+

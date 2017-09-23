@@ -1,0 +1,53 @@
+---
+- name: Validate OSPF
+  hosts: pynet-sw8
+  gather_facts: False
+  tasks:
+    - name: Check out OSPF Neighbors
+      eos_command:
+        provider: "{{ creds_core_eapi }}"
+        commands: show ip ospf neighbor vrf default
+      register: output
+      tags: sh_ospf 
+     
+    - name: Build the list of OSPF Neighbors
+      set_fact: 
+        ospf_current_peers: "{{ ospf_nei | default([]) + [ item.routerId ] }}"
+      with_items: "{{ output.stdout_lines[0].vrfs.default.instList['42'].ospfNeighborEntries }}"
+
+    - name: Print out the Current OSPF Neighbor list
+      debug:
+        var: ospf_current_peers
+
+    - name: Print out the Intended OSPF Neighbor List
+      debug:
+        var: ospf_peers
+
+    - name: Compare the current and the intended OSPF Neighbors
+      assert:
+        that: 
+          - "{{ ospf_peers | symmetric_difference(ospf_current_peers) | list }} == []"
+        msg: "Intended and Current Peers differ!"
+
+- name: Test Reachability via Ping
+  hosts: pynet-rtr1
+  gather_facts: False
+  tasks:
+    - name: Ping Loopbacks
+      napalm_ping:
+        provider: "{{ creds_napalm }}"
+        destination: "{{ item }}"
+      with_items: "{{ peer_ips }}"
+      register: output
+      tags: ping
+   
+    - name: Record Ping Results
+      set_fact:
+        reach: "{{ reach | default({}) | combine({item.item: item.results.keys()[0]}) }}"
+      with_items: "{{ output.results }}"
+      tags: ping
+
+    - name: Display Ping Results
+      debug:
+        var: reach
+      tags: ping
