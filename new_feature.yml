@@ -1,0 +1,8 @@
+---
+- name: Testing new feature
+  hosts: local
+  tasks:
+    - name: 
+
+  handlers:
+    - name: 
