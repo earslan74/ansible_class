@@ -1,6 +1,9 @@
 ---
 - name: Testing new feature
   hosts: local
+  vars:
+    - ip_add: "1.1.1.1"
+    - subnet_mask: 24
   tasks:
     - name: 
 
