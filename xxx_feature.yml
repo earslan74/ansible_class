@@ -1,2 +1,8 @@
 ---
 - name: XXX Feature
+  hosts:
+  vars:
+  tasks:
+
+  handlers:
+
